@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './QuizModal.css';
 
 const QuizModal = () => {
   const [quizData, setQuizData] = useState([]);
@@ -8,13 +9,12 @@ const QuizModal = () => {
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [passStatus, setPassStatus] = useState(null); // To store pass or fail status
-  const [percentageScore, setPercentageScore] = useState(0); // To store the percentage score
+  const [passStatus, setPassStatus] = useState(null);
+  const [percentageScore, setPercentageScore] = useState(0);
 
-  const PASS_RATE = 0.7; // 70% pass rate
+  const PASS_RATE = 0.7;
 
   useEffect(() => {
-    // Fetch quiz data from the API
     axios.get('http://localhost:3001/api/quizzes').then((response) => {
       setQuizData(response.data);
     });
@@ -25,11 +25,10 @@ const QuizModal = () => {
       ...selectedAnswers,
       [index]: e.target.value,
     });
-    setErrorMessage(''); // Clear error message when an answer is selected
+    setErrorMessage('');
   };
 
   const handleSubmitQuiz = () => {
-    // Validation: Check if all questions are answered
     if (Object.keys(selectedAnswers).length !== quizData.length) {
       setErrorMessage('Please answer all questions before submitting.');
       return;
@@ -45,82 +44,77 @@ const QuizModal = () => {
     const correctAnswersCount = evaluatedResults.filter((result) => result.correct).length;
     const totalQuestions = quizData.length;
     const passThreshold = totalQuestions * PASS_RATE;
-    
+
     const percentage = (correctAnswersCount / totalQuestions) * 100;
     const hasPassed = correctAnswersCount >= passThreshold;
 
-    setPercentageScore(percentage.toFixed(2)); // Store the percentage score (rounded to 2 decimal places)
-    setPassStatus(hasPassed ? 'Pass' : 'Fail'); // Set pass/fail status
+    setPercentageScore(percentage.toFixed(2));
+    setPassStatus(hasPassed ? 'Pass' : 'Fail');
     setResults(evaluatedResults);
     setQuizSubmitted(true);
-    setErrorMessage(''); // Clear the error message on successful submit
+    setErrorMessage('');
   };
 
   const handleCloseModal = () => {
-    setShowModal(false); // Close the modal
-    resetQuiz(); // Reset quiz when closing
+    setShowModal(false);
+    resetQuiz();
   };
 
   const handleRetakeQuiz = () => {
-    resetQuiz(); // Reset quiz and keep modal open for retake
+    resetQuiz();
   };
 
   const resetQuiz = () => {
-    setSelectedAnswers({}); // Clear selected answers
-    setResults([]); // Clear results
-    setQuizSubmitted(false); // Reset quiz submission state
-    setErrorMessage(''); // Clear error message on reset
-    setPassStatus(null); // Reset pass/fail status
-    setPercentageScore(0); // Reset percentage score
+    setSelectedAnswers({});
+    setResults([]);
+    setQuizSubmitted(false);
+    setErrorMessage('');
+    setPassStatus(null);
+    setPercentageScore(0);
   };
 
   return (
     <div>
-      <button onClick={() => setShowModal(true)} style={{ padding: '10px', background: 'blue', color: 'white' }}>
+      <button onClick={() => setShowModal(true)} className="quiz-button">
         Take Quiz
       </button>
       {showModal && (
-        <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          <div className="modal-content" style={{ backgroundColor: 'white', padding: '20px', width: '50%', borderRadius: '10px' }}>
+        <div className="modal-overlay">
+          <div className="modal-content">
             <h2>Quiz</h2>
             {!quizSubmitted ? (
               <div>
-                {errorMessage && (
-                  <p style={{ color: 'red' }}>{errorMessage}</p> // Display error message
-                )}
-                {quizData.map((q, index) => (
-                  <div key={index} style={{ marginBottom: '20px' }}>
-                    <p><strong>{index + 1}. {q.question}</strong></p>
-                    {q.options.map((option, i) => (
-                      <label key={i} style={{ display: 'block', marginBottom: '5px' }}>
-                        <input
-                          type="radio"
-                          name={`question-${index}`}
-                          value={option}
-                          onChange={(e) => handleAnswerChange(e, index)}
-                          style={{ marginRight: '10px' }}
-                          checked={selectedAnswers[index] === option} // Ensure selected answer is shown
-                        />
-                        {option}
-                      </label>
-                    ))}
-                  </div>
-                ))}
-                <button
-                  onClick={handleSubmitQuiz}
-                  style={{ padding: '10px', background: 'green', color: 'white', marginRight: '10px' }}
-                >
-                  Submit Quiz
-                </button>
-                <button onClick={handleCloseModal} style={{ padding: '10px', background: 'gray', color: 'white' }}>
-                  Close
-                </button>
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
+                <div className="questions-container">
+                  {quizData.map((q, index) => (
+                    <div key={index} className="question-item">
+                      <p><strong>{index + 1}. {q.question}</strong></p>
+                      <div className="options-container">
+                        {q.options.map((option, i) => (
+                          <label key={i} className="option-label">
+                            <input
+                              type="radio"
+                              name={`question-${index}`}
+                              value={option}
+                              onChange={(e) => handleAnswerChange(e, index)}
+                              className="radio-input"
+                              checked={selectedAnswers[index] === option}
+                            />
+                            {option}
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button onClick={handleSubmitQuiz} className="submit-button">Submit Quiz</button>
+                <button onClick={handleCloseModal} className="close-button">Close</button>
               </div>
             ) : (
               <div>
                 <h3>Results</h3>
                 {results.map((result, index) => (
-                  <div key={index} style={{ marginBottom: '20px' }}>
+                  <div key={index} className="result-item">
                     <p><strong>{index + 1}. {result.question}</strong></p>
                     <p>
                       Your Answer: <span style={{ color: result.correct ? 'green' : 'red' }}>{result.userAnswer}</span>
@@ -128,21 +122,17 @@ const QuizModal = () => {
                     </p>
                   </div>
                 ))}
-                <h4>Score: {percentageScore}%</h4>
+                <h4>Percentage Score: {percentageScore}%</h4>
                 {passStatus === 'Pass' ? (
-                  <h4 style={{ color: 'green' }}>You Passed! 🎉</h4>
+                  <h4 className="pass-message">You Passed! 🎉</h4>
                 ) : (
                   <div>
-                    <h4 style={{ color: 'red' }}>You Failed. 😞</h4>
+                    <h4 className="fail-message">You Failed. 😞</h4>
                     <p>You need at least 70% to pass, but your score is {percentageScore}%. Better luck next time!</p>
                   </div>
                 )}
-                <button onClick={handleCloseModal} style={{ padding: '10px', background: 'gray', color: 'white', marginRight: '10px' }}>
-                  Close
-                </button>
-                <button onClick={handleRetakeQuiz} style={{ padding: '10px', background: 'orange', color: 'white' }}>
-                  Retake Quiz
-                </button>
+                <button onClick={handleCloseModal} className="close-button">Close</button>
+                <button onClick={handleRetakeQuiz} className="retake-button">Retake Quiz</button>
               </div>
             )}
           </div>

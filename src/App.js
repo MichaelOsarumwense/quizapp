@@ -9,7 +9,7 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/home" element={<QuizModal />} />
+          <Route path="/" element={<QuizModal />} />
           <Route path="/quiz-form" element={<QuizForm />} />
         </Routes>
       </div>

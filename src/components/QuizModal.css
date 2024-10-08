@@ -1,19 +1,106 @@
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px;
-  }
-  
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+h2 {
+  text-align: center; /* Center the heading */
+  margin-bottom: 20px;
+}
+
+.questions-container, .results-container {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.question-item, .result-item {
+  margin-bottom: 20px;
+  text-align: left; /* Left-align the question text */
+}
+
+.options-container {
+  margin-top: 10px; /* Space between question and options */
+  display: flex;
+  flex-direction: column; /* Stack options vertically */
+}
+
+.option-label {
+  display: flex;
+  align-items: center; /* Align radio buttons and labels */
+  margin: 10px 0; /* Space between options */
+  text-align: left; /* Left-align option text */
+}
+
+.radio-input {
+  margin-right: 10px; /* Space between radio button and label */
+}
+
+.quiz-button, .submit-button, .close-button, .retake-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.quiz-button {
+  background: blue;
+}
+
+.submit-button {
+  background: green;
+}
+
+.close-button {
+  background: gray;
+}
+
+.retake-button {
+  background: orange;
+}
+
+.error-message {
+  color: red;
+  margin: 10px 0;
+}
+
+.pass-message {
+  color: green;
+}
+
+.fail-message {
+  color: red;
+}
+
+/* New styles for results */
+.results-container {
+  margin-top: 20px; /* Space between results and previous content */
+}
+
+.result-item {
+  margin-bottom: 15px; /* Space between result items */
+}
+
+.result-status {
+  margin-top: 10px; /* Space above the status message */
+}
